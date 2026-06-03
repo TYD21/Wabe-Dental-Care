@@ -1,0 +1,591 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.preview-wrap{font-family:var(--font-sans);color:var(--color-text-primary);width:100%}
+.browser-frame{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;width:100%}
+.browser-bar{background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:10px 14px;display:flex;align-items:center;gap:10px}
+.browser-dots{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#FF5F57}.dot-y{background:#FFBD2E}.dot-g{background:#28C840}
+.url-bar{flex:1;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:5px 10px;font-size:12px;color:var(--color-text-secondary)}
+.lang-pill{display:flex;border:0.5px solid var(--color-border-tertiary);border-radius:20px;overflow:hidden;font-size:11px;font-weight:500}
+.lp{padding:4px 10px;cursor:pointer;transition:all .15s;color:var(--color-text-secondary)}
+.lp.on{background:#3182CE;color:white}
+.site-nav{background:white;border-bottom:0.5px solid #E2E8F0;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;gap:8px;flex-wrap:nowrap}
+.snav-logo{display:flex;align-items:center;gap:7px}
+.snav-logo-icon{width:32px;height:32px;background:#3182CE;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.snav-logo-icon svg{width:18px;height:18px}
+.snav-brand{font-size:14px;font-weight:500;color:#1A202C;line-height:1.1}
+.snav-brand small{display:block;font-size:9px;color:#319795;letter-spacing:1.5px;text-transform:uppercase;font-weight:500}
+.snav-links{display:flex;align-items:center;gap:2px}
+.snl{padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500;color:#718096;cursor:pointer;transition:all .15s;white-space:nowrap}
+.snl:hover,.snl.active{color:#3182CE;background:#EBF4FF}
+.snav-cta{background:#3182CE;color:white;padding:7px 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
+.snav-cta:hover{background:#2563a8}
+.page-content{display:none}.page-content.show{display:block}
+
+/* HERO */
+.hero-sec{background:linear-gradient(135deg,#EBF8FF 0%,#E6FFFA 50%,#EBF4FF 100%);padding:32px 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;position:relative;overflow:hidden}
+.hero-circle{position:absolute;border-radius:50%;opacity:.06}
+.hc1{width:240px;height:240px;background:#3182CE;top:-80px;right:-60px}
+.hc2{width:160px;height:160px;background:#319795;bottom:-60px;left:-40px}
+.loc-badge{display:inline-flex;align-items:center;gap:5px;background:white;border:0.5px solid #E2E8F0;padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;color:#319795;margin-bottom:12px}
+.loc-badge i{font-size:12px}
+.hero-h{font-size:22px;font-weight:500;color:#1A202C;line-height:1.2;margin-bottom:10px}
+.hero-h em{font-style:italic;color:#3182CE}
+.hero-p{font-size:12px;color:#718096;line-height:1.6;margin-bottom:16px}
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap}
+.hbtn{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:none}
+.hbtn-blue{background:#3182CE;color:white}
+.hbtn-blue:hover{background:#2563a8}
+.hbtn-tg{background:#229ED9;color:white}
+.hbtn-tg:hover{background:#1a7ab0}
+.hbtn-out{background:white;color:#319795;border:1.5px solid #319795 !important}
+.hbtn-out:hover{background:#319795;color:white}
+.trust-row{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.tbadge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#718096}
+.tbadge i{font-size:13px;color:#319795}
+.hero-card{background:white;border-radius:14px;padding:16px;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3182CE,#319795)}
+.clinic-ph{height:180px;background:linear-gradient(135deg,#EBF8FF,#E6FFFA);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1.5px dashed #E2E8F0}
+.clinic-ph i{font-size:40px;color:#3182CE;opacity:.35}
+.clinic-ph small{font-size:10px;color:#718096;text-align:center}
+.float-c{position:absolute;background:white;border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:7px;border:0.5px solid #E2E8F0;font-size:11px}
+.fc1{bottom:8px;left:8px}.fc2{top:8px;right:8px}
+.fc-val{font-weight:600;color:#1A202C;font-size:13px}
+.fc-lbl{color:#718096;font-size:9px}
+.stars-s{color:#F6AD55;font-size:10px}
+
+/* STATS BAR */
+.stats-b{background:#1A202C;padding:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat-i{text-align:center}
+.stat-n{font-size:24px;font-weight:500;color:white}
+.stat-l{font-size:10px;color:#A0AEC0;margin-top:2px}
+
+/* SECTION */
+.sec{padding:28px 20px;max-width:100%}
+.sec-tag{display:inline-block;background:#EBF4FF;color:#3182CE;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:100px;margin-bottom:10px}
+.sec-tag.teal{background:#E6FFFA;color:#319795}
+.sec-h{font-size:18px;font-weight:500;color:#1A202C;line-height:1.2;margin-bottom:8px}
+.sec-p{font-size:12px;color:#718096;line-height:1.6;max-width:520px}
+.ov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.ov-card{background:white;border:0.5px solid #E2E8F0;border-radius:10px;padding:16px;transition:all .2s;cursor:pointer}
+.ov-card:hover{border-color:#3182CE;transform:translateY(-2px)}
+.ov-ico{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.ov-ico.b{background:#EBF4FF}.ov-ico.t{background:#E6FFFA}.ov-ico.a{background:#FFFBEB}
+.ov-ico i{font-size:18px}.ov-ico.b i{color:#3182CE}.ov-ico.t i{color:#319795}.ov-ico.a i{color:#D69E2E}
+.ov-title{font-size:13px;font-weight:500;margin-bottom:4px;color:#1A202C}
+.ov-text{font-size:11px;color:#718096;line-height:1.5}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.img-stack{position:relative;height:180px}
+.img-main{position:absolute;top:0;right:0;width:75%;height:85%;background:linear-gradient(135deg,#EBF4FF,#E6FFFA);border-radius:14px;display:flex;align-items:center;justify-content:center}
+.img-main i{font-size:36px;color:#3182CE;opacity:.3}
+.img-accent{position:absolute;bottom:0;left:0;width:55%;height:50%;background:#1A202C;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.img-accent-n{font-size:20px;font-weight:500;color:white}
+.img-accent-l{font-size:9px;color:#A0AEC0;text-align:center;padding:0 6px}
+.feat-list{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.feat{display:flex;gap:10px;align-items:flex-start}
+.feat-ico{width:34px;height:34px;min-width:34px;background:#EBF4FF;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.feat-ico i{font-size:16px;color:#3182CE}
+.feat-t{font-size:12px;font-weight:500;margin-bottom:2px;color:#1A202C}
+.feat-d{font-size:11px;color:#718096;line-height:1.5}
+
+/* SERVICES PAGE */
+.svc-hero{background:linear-gradient(135deg,#1A202C,#2D3748);padding:32px 20px;text-align:center}
+.svc-hero h1{font-size:22px;font-weight:500;color:white;margin-bottom:8px}
+.svc-hero p{font-size:12px;color:#A0AEC0;max-width:480px;margin:0 auto}
+.svc-grid{padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+.svc-card{background:white;border:0.5px solid #E2E8F0;border-radius:14px;overflow:hidden}
+.svc-head{padding:16px 20px;display:flex;align-items:center;gap:14px}
+.svc-head.blue{background:linear-gradient(135deg,#EBF4FF,#E6FFFA)}
+.svc-head.dark{background:linear-gradient(135deg,#1A202C,#2D3748)}
+.svc-head.coral{background:linear-gradient(135deg,#FFF5F5,#FED7D7)}
+.svc-head.green{background:linear-gradient(135deg,#F0FFF4,#C6F6D5)}
+.svc-ico-wrap{width:48px;height:48px;min-width:48px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;border:0.5px solid #E2E8F0}
+.svc-ico-wrap i{font-size:22px;color:#3182CE}
+.svc-ico-wrap.teal i{color:#319795}.svc-ico-wrap.red i{color:#E53E3E}.svc-ico-wrap.green i{color:#38A169}
+.svc-title{font-size:16px;font-weight:500;color:#1A202C}
+.svc-head.dark .svc-title{color:white}
+.svc-sub{font-size:11px;color:#718096;margin-top:2px}
+.svc-head.dark .svc-sub{color:#A0AEC0}
+.svc-body{padding:16px 20px}
+.svc-items{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc-item{display:flex;gap:8px;align-items:flex-start}
+.check{width:18px;height:18px;min-width:18px;background:#E6FFFA;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.check i{font-size:10px;color:#319795}
+.sit{font-size:12px;font-weight:500;margin-bottom:2px;color:#1A202C}
+.sid{font-size:11px;color:#718096;line-height:1.4}
+.svc-cta{padding:0 20px 16px;display:flex;gap:8px}
+
+/* GALLERY PAGE */
+.gal-hero{background:linear-gradient(135deg,#319795,#3182CE);padding:32px 20px;text-align:center}
+.gal-hero h1{font-size:20px;font-weight:500;color:white;margin-bottom:8px}
+.gal-hero p{font-size:12px;color:rgba(255,255,255,.85);max-width:480px;margin:0 auto}
+.gal-tabs{display:flex;gap:6px;padding:16px 20px 0;flex-wrap:wrap}
+.gtab{padding:6px 14px;border-radius:100px;font-size:11px;font-weight:500;border:0.5px solid #E2E8F0;background:white;color:#718096;cursor:pointer;transition:all .15s}
+.gtab.on,.gtab:hover{background:#3182CE;color:white;border-color:#3182CE}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 20px}
+.gal-item{border-radius:10px;background:linear-gradient(135deg,#EBF4FF,#E6FFFA);border:0.5px solid #E2E8F0;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:transform .2s;overflow:hidden;position:relative}
+.gal-item:hover{transform:scale(1.02)}
+.gal-item.lg{grid-column:span 2;aspect-ratio:unset;min-height:160px}
+.gal-item i{font-size:28px;color:#3182CE;opacity:.3}
+.gal-lbl{font-size:10px;color:#718096;text-align:center;padding:0 8px}
+.gal-ov{position:absolute;inset:0;background:rgba(49,130,206,.85);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;border-radius:10px}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-ov span{color:white;font-size:12px;font-weight:500;text-align:center;padding:8px}
+
+/* CONTACT PAGE */
+.con-hero{background:linear-gradient(135deg,#F7FAFC,#EBF4FF);padding:28px 20px;border-bottom:0.5px solid #E2E8F0}
+.con-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.ic-list{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.ic{background:white;border:0.5px solid #E2E8F0;border-radius:10px;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;transition:border .15s}
+.ic:hover{border-color:#3182CE}
+.ic-icon{width:34px;height:34px;min-width:34px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.ic-icon.b{background:#EBF4FF}.ic-icon.t{background:#E6FFFA}.ic-icon.a{background:#FFFBEB}.ic-icon.g{background:#F0FFF4}
+.ic-icon.b i{color:#3182CE}.ic-icon.t i{color:#319795}.ic-icon.a i{color:#D69E2E}.ic-icon.g i{color:#38A169}
+.ic-icon i{font-size:16px}
+.ic-lbl{font-size:10px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.ic-val{font-size:13px;font-weight:500;color:#1A202C}
+.ic-sub{font-size:11px;color:#718096}
+.map-card{background:white;border-radius:14px;padding:16px;border:0.5px solid #E2E8F0}
+.map-ph{height:140px;background:linear-gradient(135deg,#EBF4FF,#E6FFFA);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:1.5px dashed #E2E8F0;margin-bottom:12px}
+.map-ph i{font-size:32px;color:#3182CE;opacity:.35}
+.lm-list{display:flex;flex-direction:column;gap:5px}
+.lm{display:flex;align-items:center;gap:7px;font-size:11px;padding:6px 8px;background:#F7FAFC;border-radius:7px}
+.lm i{font-size:12px;color:#319795}
+
+/* HOURS */
+.hours-sec{padding:24px 20px;background:#F7FAFC}
+.htable{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden;margin-top:16px;font-size:12px}
+.htable th{background:#1A202C;color:white;padding:10px 14px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.htable td{padding:10px 14px;border-bottom:0.5px solid #E2E8F0;color:#1A202C}
+.htable tr:last-child td{border-bottom:none}
+.htable tr:nth-child(even) td{background:#F7FAFC}
+.hbadge{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600}
+.hb-o{background:#E6FFFA;color:#319795}.hb-l{background:#FFFBEB;color:#D69E2E}.hb-c{background:#FFF5F5;color:#E53E3E}
+
+/* BOOKING */
+.book-sec{padding:24px 20px}
+.form-card-b{background:white;border-radius:14px;padding:24px;border:0.5px solid #E2E8F0}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgroup{display:flex;flex-direction:column;gap:5px}.fgroup.full{grid-column:span 2}
+.flbl{font-size:11px;font-weight:600;color:#1A202C}
+.finp{padding:9px 12px;border:0.5px solid #E2E8F0;border-radius:7px;font-size:12px;color:#1A202C;width:100%;outline:none;transition:border .15s;font-family:inherit}
+.finp:focus{border-color:#3182CE}
+.fsub{width:100%;padding:12px;background:#3182CE;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .15s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.fsub:hover{background:#2563a8}
+.fnote{text-align:center;font-size:10px;color:#718096;margin-top:8px}
+.direct-row{margin-top:16px;padding:14px;background:#F7FAFC;border-radius:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.direct-row span{font-size:12px;font-weight:500;color:#1A202C}
+
+/* FOOTER */
+.ft{background:#1A202C;padding:32px 20px 16px}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:24px;margin-bottom:24px}
+.ft-desc{font-size:11px;color:#A0AEC0;line-height:1.6;margin-top:8px;max-width:200px}
+.ft-soc{display:flex;gap:7px;margin-top:12px}
+.socb{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+.socb:hover{background:#3182CE}
+.socb i{font-size:13px;color:white}
+.ft-col-t{font-size:12px;font-weight:500;color:white;margin-bottom:10px}
+.ft-link{display:block;font-size:11px;color:#A0AEC0;margin-bottom:7px;cursor:pointer;transition:color .15s}
+.ft-link:hover{color:#3182CE}
+.ft-bottom{border-top:0.5px solid rgba(255,255,255,.08);padding-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.ft-copy{font-size:10px;color:#718096}
+.ft-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.06);padding:4px 10px;border-radius:100px;font-size:10px;color:#A0AEC0}
+.ft-badge i{font-size:11px;color:#319795}
+
+.fab-preview{position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;gap:7px;align-items:flex-end;z-index:5}
+.fab-p{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
+.fab-p:hover{transform:scale(1.08)}
+.fab-p.ph{background:#319795}.fab-p.tg{background:#229ED9}
+.fab-p i{font-size:17px;color:white}
+.page-wrap{position:relative;min-height:200px}
+</style>
+
+<div class="preview-wrap">
+<h2 class="sr-only">Wabe Dental Care website preview — showing all 4 pages with bilingual English/Amharic toggle</h2>
+
+<div class="browser-frame">
+  <div class="browser-bar">
+    <div class="browser-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+    <div class="url-bar">🔒 wabedental.et</div>
+    <div class="lang-pill">
+      <div class="lp on" id="lpEn" onclick="switchLang('en')">EN</div>
+      <div class="lp" id="lpAm" onclick="switchLang('am')">አማ</div>
+    </div>
+  </div>
+
+  <!-- SITE NAV -->
+  <div class="site-nav">
+    <div class="snav-logo">
+      <div class="snav-logo-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M20 6C13,6 8,11 8,18c0,6 4,11 6,14l2,4c1,2 4,2 4,0l2-4c2-3 6-8 6-14c0-7-5-12-8-12z" fill="white"/><circle cx="20" cy="18" r="5" fill="#3182CE"/></svg></div>
+      <div class="snav-brand">
+        <span id="nb-name">Wabe Dental</span>
+        <small id="nb-loc">WOLKITE, ETHIOPIA</small>
+      </div>
+    </div>
+    <div class="snav-links">
+      <div class="snl active" id="nl-home" onclick="showSitePage('home')"><span id="nl-h">Home</span></div>
+      <div class="snl" id="nl-services" onclick="showSitePage('services')"><span id="nl-s">Services</span></div>
+      <div class="snl" id="nl-gallery" onclick="showSitePage('gallery')"><span id="nl-g">Gallery</span></div>
+      <div class="snl" id="nl-contact" onclick="showSitePage('contact')"><span id="nl-c">Contact</span></div>
+    </div>
+    <div class="snav-cta" id="nav-cta">📞 Call Now</div>
+  </div>
+
+  <!-- ═══ HOME ═══ -->
+  <div class="page-content show" id="sp-home">
+    <div class="hero-sec">
+      <div class="hc1 hero-circle"></div><div class="hc2 hero-circle"></div>
+      <div>
+        <div class="loc-badge"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="h-loc">Wolkite, Silte Zone · Ethiopia</span></div>
+        <h2 class="hero-h" id="h-title">Your Smile Deserves <em>Expert</em> Dental Care</h2>
+        <p class="hero-p" id="h-desc">Wabe Dental Care delivers modern, compassionate dentistry in Wolkite. From routine check-ups to advanced cosmetic treatments — your oral health is our priority.</p>
+        <div class="hero-btns">
+          <div class="hbtn hbtn-blue"><i class="ti ti-phone" aria-hidden="true"></i><span id="hb1">Call &amp; Book</span></div>
+          <div class="hbtn hbtn-tg"><i class="ti ti-send" aria-hidden="true"></i><span id="hb2">Telegram</span></div>
+          <div class="hbtn hbtn-out"><span id="hb3">Our Services</span></div>
+        </div>
+        <div class="trust-row">
+          <div class="tbadge"><i class="ti ti-shield-check" aria-hidden="true"></i><span id="tr1">Certified Dentists</span></div>
+          <div class="tbadge"><i class="ti ti-heart" aria-hidden="true"></i><span id="tr2">2,500+ Patients</span></div>
+          <div class="tbadge"><i class="ti ti-star" aria-hidden="true"></i><span id="tr3">Modern Equipment</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-card">
+          <div class="clinic-ph">
+            <i class="ti ti-building-hospital" aria-hidden="true"></i>
+            <small id="h-clinic">Wabe Dental Care Clinic<br/>Wolkite, Ethiopia</small>
+          </div>
+          <div class="float-c fc1"><i class="ti ti-star" aria-hidden="true" style="color:#F6AD55;font-size:14px"></i><div><div class="fc-lbl" id="fc-lbl1">Patient Rating</div><div class="fc-val">4.9 <span class="stars-s">★★★★★</span></div></div></div>
+          <div class="float-c fc2"><i class="ti ti-user" aria-hidden="true" style="color:#3182CE;font-size:14px"></i><div><div class="fc-lbl" id="fc-lbl2">Patients Served</div><div class="fc-val">2,500+</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-b">
+      <div class="stat-i"><div class="stat-n">5+</div><div class="stat-l" id="st1">Years of Service</div></div>
+      <div class="stat-i"><div class="stat-n">2,500+</div><div class="stat-l" id="st2">Happy Patients</div></div>
+      <div class="stat-i"><div class="stat-n">4</div><div class="stat-l" id="st3">Specialist Dentists</div></div>
+      <div class="stat-i"><div class="stat-n">12+</div><div class="stat-l" id="st4">Dental Services</div></div>
+    </div>
+
+    <div class="sec">
+      <div class="about-grid">
+        <div><div class="img-stack"><div class="img-main"><i class="ti ti-shield-check" aria-hidden="true"></i></div><div class="img-accent"><div class="img-accent-n">2019</div><div class="img-accent-l" id="founded">Founded in Wolkite</div></div></div></div>
+        <div>
+          <div class="sec-tag" id="ab-tag">About Us</div>
+          <h2 class="sec-h" id="ab-h">Bringing World-Class Dental Care to Wolkite</h2>
+          <p class="sec-p" id="ab-p">Since 2019, Wabe Dental Care has been Wolkite's trusted destination for comprehensive oral health services.</p>
+          <div class="feat-list">
+            <div class="feat"><div class="feat-ico"><i class="ti ti-certificate" aria-hidden="true"></i></div><div><div class="feat-t" id="ft1">Fully Certified Team</div><div class="feat-d" id="fd1">All dentists hold valid Ethiopian Medical Council credentials.</div></div></div>
+            <div class="feat"><div class="feat-ico"><i class="ti ti-virus-off" aria-hidden="true"></i></div><div><div class="feat-t" id="ft2">Sterilized &amp; Safe</div><div class="feat-d" id="fd2">Hospital-grade sterilization for complete patient safety.</div></div></div>
+            <div class="feat"><div class="feat-ico"><i class="ti ti-coin" aria-hidden="true"></i></div><div><div class="feat-t" id="ft3">Affordable Pricing</div><div class="feat-d" id="fd3">Transparent pricing for the Wolkite community.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-top:0.5px solid #E2E8F0;margin:24px 0"></div>
+      <div style="text-align:center;margin-bottom:20px"><div class="sec-tag" id="svc-tag">Our Services</div><h2 class="sec-h" id="svc-h">Everything Your Smile Needs</h2></div>
+      <div class="ov-grid">
+        <div class="ov-card" onclick="showSitePage('services')"><div class="ov-ico b"><i class="ti ti-heart" aria-hidden="true"></i></div><div class="ov-title" id="ov1t">Preventive Care</div><div class="ov-text" id="ov1d">Cleanings, check-ups, X-rays &amp; fluoride.</div></div>
+        <div class="ov-card" onclick="showSitePage('services')"><div class="ov-ico t"><i class="ti ti-adjustments" aria-hidden="true"></i></div><div class="ov-title" id="ov2t">Orthodontics</div><div class="ov-text" id="ov2d">Braces and aligners for perfect alignment.</div></div>
+        <div class="ov-card" onclick="showSitePage('services')"><div class="ov-ico a"><i class="ti ti-bolt" aria-hidden="true"></i></div><div class="ov-title" id="ov3t">Oral Surgery</div><div class="ov-text" id="ov3d">Expert extractions &amp; implant procedures.</div></div>
+        <div class="ov-card" onclick="showSitePage('services')"><div class="ov-ico b"><i class="ti ti-sparkles" aria-hidden="true"></i></div><div class="ov-title" id="ov4t">Cosmetic Dentistry</div><div class="ov-text" id="ov4d">Whitening, veneers &amp; smile makeovers.</div></div>
+        <div class="ov-card" onclick="showSitePage('services')"><div class="ov-ico t"><i class="ti ti-clipboard" aria-hidden="true"></i></div><div class="ov-title" id="ov5t">Restorative Care</div><div class="ov-text" id="ov5d">Crowns, bridges, dentures &amp; fillings.</div></div>
+        <div class="ov-card" onclick="showSitePage('contact')"><div class="ov-ico a"><i class="ti ti-calendar" aria-hidden="true"></i></div><div class="ov-title" id="ov6t">Easy Booking</div><div class="ov-text" id="ov6d">Phone, Telegram or online form.</div></div>
+      </div>
+      <div style="text-align:center;margin-top:20px">
+        <div class="hbtn hbtn-blue" style="display:inline-flex" onclick="showSitePage('contact')"><i class="ti ti-calendar" aria-hidden="true"></i><span id="book-cta">Book an Appointment</span></div>
+      </div>
+    </div>
+
+    <div class="ft" style="position:relative">
+      <div class="ft-grid">
+        <div><div style="display:flex;align-items:center;gap:7px"><div class="snav-logo-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M20 6C13,6 8,11 8,18c0,6 4,11 6,14l2,4c1,2 4,2 4,0l2-4c2-3 6-8 6-14c0-7-5-12-8-12z" fill="white"/><circle cx="20" cy="18" r="5" fill="#3182CE"/></svg></div><div class="snav-brand" style="color:white;font-size:13px"><span id="ft-brand">Wabe Dental</span><small style="color:#319795">WOLKITE</small></div></div><p class="ft-desc" id="ft-desc">Comprehensive dental care for the Wolkite community.</p><div class="ft-soc"><div class="socb"><i class="ti ti-brand-telegram" aria-hidden="true"></i></div><div class="socb"><i class="ti ti-phone" aria-hidden="true"></i></div></div></div>
+        <div><div class="ft-col-t" id="ft-ql">Quick Links</div><div class="ft-link" onclick="showSitePage('home')" id="ft-home">Home</div><div class="ft-link" onclick="showSitePage('services')" id="ft-svc">Services</div><div class="ft-link" onclick="showSitePage('gallery')" id="ft-gal">Gallery</div><div class="ft-link" onclick="showSitePage('contact')" id="ft-con">Contact</div></div>
+        <div><div class="ft-col-t" id="ft-sl">Services</div><div class="ft-link" id="fts1">Preventive Care</div><div class="ft-link" id="fts2">Orthodontics</div><div class="ft-link" id="fts3">Oral Surgery</div><div class="ft-link" id="fts4">Cosmetic</div><div class="ft-link" id="fts5">Implants</div></div>
+        <div><div class="ft-col-t" id="ft-cl">Contact</div><div class="ft-link">📞 +251 000 000 000</div><div class="ft-link">✈️ @wabedentalcare</div><div class="ft-link" id="ft-addr">📍 Wolkite, Silte Zone</div><div class="ft-link">✉️ info@wabedental.et</div></div>
+      </div>
+      <div class="ft-bottom"><div class="ft-copy" id="ft-copy">© 2024 Wabe Dental Care. Wolkite, Ethiopia.</div><div class="ft-badge"><i class="ti ti-shield-check" aria-hidden="true"></i><span id="ft-lic">Licensed Dental Practice</span></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ SERVICES ═══ -->
+  <div class="page-content" id="sp-services">
+    <div class="svc-hero"><h1 id="sv-h">Our Dental Services</h1><p id="sv-p">Full spectrum of oral health services in Wolkite — prevention, correction, surgery, and aesthetics.</p></div>
+    <div class="svc-grid">
+      <div class="svc-card"><div class="svc-head blue"><div class="svc-ico-wrap"><i class="ti ti-heart" aria-hidden="true"></i></div><div><div class="svc-title" id="sv1t">Preventive Care</div><div class="svc-sub" id="sv1s">Keep problems away before they start</div></div></div><div class="svc-body"><div class="svc-items"><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv1i1">Dental Cleaning</div><div class="sid" id="sv1d1">Professional scaling &amp; polishing every 6 months.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv1i2">Digital X-Rays</div><div class="sid" id="sv1d2">Low-radiation imaging for precise diagnosis.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv1i3">Fluoride Treatment</div><div class="sid" id="sv1d3">Strengthens enamel, prevents decay.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv1i4">Gum Screening</div><div class="sid" id="sv1d4">Early detection of gum disease.</div></div></div></div></div><div class="svc-cta"><div class="hbtn hbtn-blue" style="font-size:11px;padding:7px 12px"><i class="ti ti-phone" aria-hidden="true"></i><span id="sv-btn1">Book Now</span></div><div class="hbtn hbtn-tg" style="font-size:11px;padding:7px 12px"><span id="sv-btn2">Telegram</span></div></div></div>
+
+      <div class="svc-card"><div class="svc-head dark"><div class="svc-ico-wrap teal"><i class="ti ti-adjustments" aria-hidden="true"></i></div><div><div class="svc-title" id="sv2t">Orthodontics</div><div class="svc-sub" id="sv2s">Align your teeth for a perfect smile</div></div></div><div class="svc-body"><div class="svc-items"><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv2i1">Metal Braces</div><div class="sid" id="sv2d1">Effective for all misalignment types.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv2i2">Ceramic Braces</div><div class="sid" id="sv2d2">Tooth-colored discreet correction.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv2i3">Retainers</div><div class="sid" id="sv2d3">Maintain results after treatment.</div></div></div><div class="svc-item"><div class="check"><i class="ti ti-check" aria-hidden="true"></i></div><div><div class="sit" id="sv2i4">Free Consultation</div><div class="sid" id="sv2d4">Complimentary treatment plan.</div></div></div></div></div><div class="svc-cta"><div class="hbtn hbtn-blue" style="font-size:11px;padding:7px 12px"><i class="ti ti-phone" aria-hidden="true"></i><span id="sv-btn3">Book Now</span></div><div class="hbtn hbtn-tg" style="font-size:11px;padding:7px 12px">Telegram</div></div></div>
+    </div>
+    <div class="ft" style="padding:20px"><div class="ft-bottom" style="border-top:none;padding-top:0"><div class="ft-copy" id="ft-copy2">© 2024 Wabe Dental Care. Wolkite, Ethiopia.</div><div class="ft-badge"><i class="ti ti-shield-check" aria-hidden="true"></i><span id="ft-lic2">Licensed Dental Practice</span></div></div></div>
+  </div>
+
+  <!-- ═══ GALLERY ═══ -->
+  <div class="page-content" id="sp-gallery">
+    <div class="gal-hero"><h1 id="gl-h">Our Clinic &amp; Equipment</h1><p id="gl-p">Take a visual tour of Wabe Dental Care — modern facilities built for your comfort.</p></div>
+    <div class="gal-tabs">
+      <div class="gtab on" id="gt0" onclick="filterGalPrev('all',0)"><span id="gta0">All Photos</span></div>
+      <div class="gtab" id="gt1" onclick="filterGalPrev('facility',1)"><span id="gta1">Clinic Facility</span></div>
+      <div class="gtab" id="gt2" onclick="filterGalPrev('equipment',2)"><span id="gta2">Equipment</span></div>
+      <div class="gtab" id="gt3" onclick="filterGalPrev('sterilization',3)"><span id="gta3">Sterilization</span></div>
+      <div class="gtab" id="gt4" onclick="filterGalPrev('smiles',4)"><span id="gta4">Patient Smiles</span></div>
+    </div>
+    <div class="gal-grid" id="gal-grid-p">
+      <div class="gal-item lg" data-cat="facility"><i class="ti ti-building-hospital" aria-hidden="true"></i><span class="gal-lbl" id="gl1">Main Reception &amp; Waiting Area</span><div class="gal-ov"><span id="glo1">Modern Reception</span></div></div>
+      <div class="gal-item" data-cat="equipment"><i class="ti ti-bolt" aria-hidden="true"></i><span class="gal-lbl" id="gl2">Digital X-Ray System</span><div class="gal-ov"><span id="glo2">Low Radiation Imaging</span></div></div>
+      <div class="gal-item" data-cat="equipment"><i class="ti ti-armchair" aria-hidden="true"></i><span class="gal-lbl" id="gl3">Treatment Chair</span><div class="gal-ov"><span id="glo3">Patient Comfort</span></div></div>
+      <div class="gal-item" data-cat="sterilization"><i class="ti ti-virus-off" aria-hidden="true"></i><span class="gal-lbl" id="gl4">Autoclave Unit</span><div class="gal-ov"><span id="glo4">Hospital-Grade Sterilization</span></div></div>
+      <div class="gal-item" data-cat="facility"><i class="ti ti-door" aria-hidden="true"></i><span class="gal-lbl" id="gl5">Treatment Room 1</span><div class="gal-ov"><span id="glo5">Private Room</span></div></div>
+      <div class="gal-item" data-cat="smiles"><i class="ti ti-mood-smile" aria-hidden="true"></i><span class="gal-lbl" id="gl6">Patient Results</span><div class="gal-ov"><span id="glo6">Before &amp; After Smiles</span></div></div>
+    </div>
+    <div class="ft" style="padding:20px"><div class="ft-bottom" style="border-top:none;padding-top:0"><div class="ft-copy" id="ft-copy3">© 2024 Wabe Dental Care. Wolkite, Ethiopia.</div><div class="ft-badge"><i class="ti ti-shield-check" aria-hidden="true"></i><span id="ft-lic3">Licensed Practice</span></div></div></div>
+  </div>
+
+  <!-- ═══ CONTACT ═══ -->
+  <div class="page-content" id="sp-contact">
+    <div class="con-hero">
+      <div class="sec-tag" id="con-tag">Find Us</div>
+      <h2 class="sec-h" id="con-h" style="margin-top:8px">Get in Touch With Us</h2>
+      <p class="sec-p" id="con-p" style="margin-bottom:0">We're in Wolkite, Silte Zone. Walk-ins welcome, appointments preferred.</p>
+      <div class="con-grid" style="margin-top:16px">
+        <div>
+          <div class="ic-list">
+            <div class="ic"><div class="ic-icon b"><i class="ti ti-phone" aria-hidden="true"></i></div><div><div class="ic-lbl" id="ic1l">Phone</div><div class="ic-val">+251 000 000 000</div><div class="ic-sub" id="ic1s">Tap to call directly</div></div></div>
+            <div class="ic"><div class="ic-icon t"><i class="ti ti-brand-telegram" aria-hidden="true"></i></div><div><div class="ic-lbl">Telegram</div><div class="ic-val">@wabedentalcare</div><div class="ic-sub" id="ic2s">Chat with us</div></div></div>
+            <div class="ic"><div class="ic-icon a"><i class="ti ti-map-pin" aria-hidden="true"></i></div><div><div class="ic-lbl" id="ic3l">Address</div><div class="ic-val" id="ic3v">Wolkite Town Center</div><div class="ic-sub" id="ic3s">Silte Zone, Ethiopia</div></div></div>
+            <div class="ic"><div class="ic-icon g"><i class="ti ti-mail" aria-hidden="true"></i></div><div><div class="ic-lbl">Email</div><div class="ic-val">info@wabedental.et</div><div class="ic-sub" id="ic4s">Reply within 24 hours</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="map-card">
+            <h3 style="font-size:13px;font-weight:500;color:#1A202C;margin-bottom:10px">📍 <span id="loc-guide">Location Guide</span></h3>
+            <div class="map-ph"><i class="ti ti-map-2" aria-hidden="true"></i><small id="map-ph-txt" style="font-size:10px;color:#718096;text-align:center">Wolkite, Silte Zone<br/>SNNPR, Ethiopia</small></div>
+            <p style="font-size:11px;font-weight:600;color:#1A202C;margin-bottom:7px" id="landmarks">🏙️ Nearby Landmarks</p>
+            <div class="lm-list">
+              <div class="lm"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="lm1">Near Wolkite University Campus</span></div>
+              <div class="lm"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="lm2">5 min from Wolkite Health Center</span></div>
+              <div class="lm"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="lm3">Opposite Commercial Bank</span></div>
+              <div class="lm"><i class="ti ti-map-pin" aria-hidden="true"></i><span id="lm4">200m from Bus Terminal</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hours-sec">
+      <div style="text-align:center;margin-bottom:4px"><div class="sec-tag" id="hrs-tag">Working Hours</div><h2 class="sec-h" id="hrs-h">When Are We Open?</h2></div>
+      <table class="htable">
+        <thead><tr><th id="ht-day">Day</th><th id="ht-am">Morning</th><th id="ht-pm">Afternoon</th><th id="ht-st">Status</th></tr></thead>
+        <tbody>
+          <tr><td id="d1"><strong>Monday</strong></td><td>8:00 – 12:00</td><td>14:00 – 18:00</td><td><span class="hbadge hb-o" id="s1">Open</span></td></tr>
+          <tr><td id="d2"><strong>Tuesday</strong></td><td>8:00 – 12:00</td><td>14:00 – 18:00</td><td><span class="hbadge hb-o" id="s2">Open</span></td></tr>
+          <tr><td id="d3"><strong>Wednesday</strong></td><td>8:00 – 12:00</td><td>14:00 – 18:00</td><td><span class="hbadge hb-o" id="s3">Open</span></td></tr>
+          <tr><td id="d4"><strong>Friday</strong></td><td>8:00 – 12:00</td><td>14:00 – 17:00</td><td><span class="hbadge hb-o" id="s4">Open</span></td></tr>
+          <tr><td id="d5"><strong>Saturday</strong></td><td>9:00 – 13:00</td><td>—</td><td><span class="hbadge hb-l" id="s5">Limited</span></td></tr>
+          <tr><td id="d6"><strong>Sunday</strong></td><td>—</td><td>—</td><td><span class="hbadge hb-c" id="s6">Closed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="book-sec">
+      <div style="text-align:center;margin-bottom:16px"><div class="sec-tag" id="bk-tag">Book Online</div><h2 class="sec-h" id="bk-h">Request an Appointment</h2></div>
+      <div class="form-card-b">
+        <div class="fg">
+          <div class="fgroup"><label class="flbl" id="fl-fn">First Name *</label><input class="finp" placeholder="Abebe"/></div>
+          <div class="fgroup"><label class="flbl" id="fl-ln">Last Name *</label><input class="finp" placeholder="Girma"/></div>
+          <div class="fgroup"><label class="flbl" id="fl-ph">Phone Number *</label><input class="finp" placeholder="+251 9XX XXX XXX"/></div>
+          <div class="fgroup"><label class="flbl" id="fl-em">Email</label><input class="finp" placeholder="email@example.com"/></div>
+          <div class="fgroup"><label class="flbl" id="fl-sv">Service Needed *</label><select class="finp"><option id="f-sel">Select service…</option></select></div>
+          <div class="fgroup"><label class="flbl" id="fl-dt">Preferred Date</label><input class="finp" type="date"/></div>
+          <div class="fgroup full"><label class="flbl" id="fl-nt">Notes</label><textarea class="finp" rows="3" placeholder="Describe your concern…"></textarea></div>
+        </div>
+        <button class="fsub" id="fsub-btn"><i class="ti ti-calendar" aria-hidden="true"></i><span id="fsub-txt">Request Appointment</span></button>
+        <p class="fnote" id="fnote">🔒 Secure. We confirm within 2 hours.</p>
+        <div class="direct-row"><span id="direct-q">Prefer to book directly?</span><div class="hbtn hbtn-blue" style="font-size:11px;padding:7px 12px"><i class="ti ti-phone" aria-hidden="true"></i><span id="dir-call">Call Us</span></div><div class="hbtn hbtn-tg" style="font-size:11px;padding:7px 12px"><span id="dir-tg">Telegram</span></div></div>
+      </div>
+    </div>
+
+    <div class="ft"><div class="ft-bottom"><div class="ft-copy" id="ft-copy4">© 2024 Wabe Dental Care. Wolkite, Ethiopia.</div><div class="ft-badge"><i class="ti ti-shield-check" aria-hidden="true"></i><span id="ft-lic4">Licensed Practice</span></div></div></div>
+  </div>
+
+  <div class="fab-preview">
+    <div class="fab-p tg" title="Telegram"><i class="ti ti-brand-telegram" aria-hidden="true"></i></div>
+    <div class="fab-p ph" title="Call"><i class="ti ti-phone" aria-hidden="true"></i></div>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+const T={
+  en:{
+    'nb-name':'Wabe Dental','nb-loc':'WOLKITE, ETHIOPIA',
+    'nl-h':'Home','nl-s':'Services','nl-g':'Gallery','nl-c':'Contact','nav-cta':'📞 Call Now',
+    'h-loc':'Wolkite, Silte Zone · Ethiopia',
+    'h-title':'Your Smile Deserves <em>Expert</em> Dental Care',
+    'h-desc':'Wabe Dental Care delivers modern, compassionate dentistry in Wolkite. From routine check-ups to advanced cosmetic treatments.',
+    'hb1':'Call & Book','hb2':'Telegram','hb3':'Our Services',
+    'tr1':'Certified Dentists','tr2':'2,500+ Patients','tr3':'Modern Equipment',
+    'h-clinic':'Wabe Dental Care Clinic<br/>Wolkite, Ethiopia',
+    'fc-lbl1':'Patient Rating','fc-lbl2':'Patients Served',
+    'st1':'Years of Service','st2':'Happy Patients','st3':'Specialist Dentists','st4':'Dental Services',
+    'ab-tag':'About Us','ab-h':'Bringing World-Class Dental Care to Wolkite',
+    'ab-p':'Since 2019, Wabe Dental Care has been Wolkite\'s trusted destination for oral health services.',
+    'founded':'Founded in Wolkite',
+    'ft1':'Fully Certified Team','fd1':'All dentists hold valid Ethiopian Medical Council credentials.',
+    'ft2':'Sterilized & Safe','fd2':'Hospital-grade sterilization for complete patient safety.',
+    'ft3':'Affordable Pricing','fd3':'Transparent pricing for the Wolkite community.',
+    'svc-tag':'Our Services','svc-h':'Everything Your Smile Needs',
+    'ov1t':'Preventive Care','ov1d':'Cleanings, check-ups, X-rays & fluoride.',
+    'ov2t':'Orthodontics','ov2d':'Braces and aligners for perfect alignment.',
+    'ov3t':'Oral Surgery','ov3d':'Expert extractions & implant procedures.',
+    'ov4t':'Cosmetic Dentistry','ov4d':'Whitening, veneers & smile makeovers.',
+    'ov5t':'Restorative Care','ov5d':'Crowns, bridges, dentures & fillings.',
+    'ov6t':'Easy Booking','ov6d':'Phone, Telegram or online form.',
+    'book-cta':'Book an Appointment',
+    'ft-brand':'Wabe Dental','ft-desc':'Comprehensive dental care for the Wolkite community.',
+    'ft-ql':'Quick Links','ft-home':'Home','ft-svc':'Services','ft-gal':'Gallery','ft-con':'Contact',
+    'ft-sl':'Services','fts1':'Preventive Care','fts2':'Orthodontics','fts3':'Oral Surgery','fts4':'Cosmetic','fts5':'Implants',
+    'ft-cl':'Contact','ft-addr':'📍 Wolkite, Silte Zone',
+    'ft-copy':'© 2024 Wabe Dental Care. Wolkite, Ethiopia.','ft-lic':'Licensed Dental Practice',
+    'sv-h':'Our Dental Services','sv-p':'Full spectrum of oral health services in Wolkite.',
+    'sv1t':'Preventive Care','sv1s':'Keep problems away before they start',
+    'sv1i1':'Dental Cleaning','sv1d1':'Professional scaling & polishing every 6 months.',
+    'sv1i2':'Digital X-Rays','sv1d2':'Low-radiation imaging for precise diagnosis.',
+    'sv1i3':'Fluoride Treatment','sv1d3':'Strengthens enamel, prevents decay.',
+    'sv1i4':'Gum Screening','sv1d4':'Early detection of gum disease.',
+    'sv-btn1':'Book Now','sv-btn2':'Telegram',
+    'sv2t':'Orthodontics','sv2s':'Align your teeth for a perfect smile',
+    'sv2i1':'Metal Braces','sv2d1':'Effective for all misalignment types.',
+    'sv2i2':'Ceramic Braces','sv2d2':'Tooth-colored discreet correction.',
+    'sv2i3':'Retainers','sv2d3':'Maintain results after treatment.',
+    'sv2i4':'Free Consultation','sv2d4':'Complimentary treatment plan.',
+    'sv-btn3':'Book Now',
+    'ft-copy2':'© 2024 Wabe Dental Care.','ft-lic2':'Licensed Dental Practice',
+    'gl-h':'Our Clinic & Equipment','gl-p':'Take a visual tour of Wabe Dental Care.',
+    'gta0':'All Photos','gta1':'Clinic Facility','gta2':'Equipment','gta3':'Sterilization','gta4':'Patient Smiles',
+    'gl1':'Main Reception & Waiting Area','glo1':'Modern Reception',
+    'gl2':'Digital X-Ray System','glo2':'Low Radiation Imaging',
+    'gl3':'Treatment Chair','glo3':'Patient Comfort',
+    'gl4':'Autoclave Unit','glo4':'Hospital-Grade Sterilization',
+    'gl5':'Treatment Room 1','glo5':'Private Room',
+    'gl6':'Patient Results','glo6':'Before & After Smiles',
+    'ft-copy3':'© 2024 Wabe Dental Care.','ft-lic3':'Licensed Practice',
+    'con-tag':'Find Us','con-h':'Get in Touch With Us','con-p':'We\'re in Wolkite, Silte Zone. Walk-ins welcome.',
+    'ic1l':'Phone','ic1s':'Tap to call directly','ic2s':'Chat with us',
+    'ic3l':'Address','ic3v':'Wolkite Town Center','ic3s':'Silte Zone, Ethiopia','ic4s':'Reply within 24 hours',
+    'loc-guide':'Location Guide','map-ph-txt':'Wolkite, Silte Zone<br/>SNNPR, Ethiopia','landmarks':'🏙️ Nearby Landmarks',
+    'lm1':'Near Wolkite University Campus','lm2':'5 min from Health Center','lm3':'Opposite Commercial Bank','lm4':'200m from Bus Terminal',
+    'hrs-tag':'Working Hours','hrs-h':'When Are We Open?',
+    'ht-day':'Day','ht-am':'Morning','ht-pm':'Afternoon','ht-st':'Status',
+    'd1':'<strong>Monday</strong>','d2':'<strong>Tuesday</strong>','d3':'<strong>Wednesday</strong>','d4':'<strong>Friday</strong>','d5':'<strong>Saturday</strong>','d6':'<strong>Sunday</strong>',
+    's1':'Open','s2':'Open','s3':'Open','s4':'Open','s5':'Limited','s6':'Closed',
+    'bk-tag':'Book Online','bk-h':'Request an Appointment',
+    'fl-fn':'First Name *','fl-ln':'Last Name *','fl-ph':'Phone Number *','fl-em':'Email','fl-sv':'Service Needed *','fl-dt':'Preferred Date','fl-nt':'Notes',
+    'f-sel':'Select service…','fsub-txt':'Request Appointment','fnote':'🔒 Secure. We confirm within 2 hours.',
+    'direct-q':'Prefer to book directly?','dir-call':'Call Us','dir-tg':'Telegram',
+    'ft-copy4':'© 2024 Wabe Dental Care. Wolkite, Ethiopia.','ft-lic4':'Licensed Practice'
+  },
+  am:{
+    'nb-name':'ዋቤ ዯንታል','nb-loc':'ወልቂጤ፣ ኢትዮጵያ',
+    'nl-h':'ዋና','nl-s':'አገልግሎቶች','nl-g':'ጋለሪ','nl-c':'ያግኙን','nav-cta':'📞 አሁን ደውሉ',
+    'h-loc':'ወልቂጤ፣ ሲልጤ ዞን · ኢትዮጵያ',
+    'h-title':'ፈገግታዎ የሚያስፈልገው <em>ባለሙያ</em> ሕክምና ነው',
+    'h-desc':'ዋቤ ዯንታል ኬር በወልቂጤ ዘመናዊ የጥርስ ሕክምና ያቀርባል። ከተለመደ ምርመራ እስከ ላቀ ሕክምና።',
+    'hb1':'ደውለው ቀጠሮ ይያዙ','hb2':'ቴሌግራም','hb3':'አገልግሎቶቻችን',
+    'tr1':'የተረጋገጡ ሐኪሞች','tr2':'2,500+ ታካሚዎች','tr3':'ዘመናዊ መሣሪያዎች',
+    'h-clinic':'ዋቤ ዯንታል ኬር ክሊኒክ<br/>ወልቂጤ፣ ኢትዮጵያ',
+    'fc-lbl1':'የታካሚ ደረጃ','fc-lbl2':'ያገለገልን ታካሚዎች',
+    'st1':'የአገልግሎት ዓመታት','st2':'ደስተኛ ታካሚዎች','st3':'ስፔሻሊስት ሐኪሞች','st4':'የጥርስ አገልግሎቶች',
+    'ab-tag':'ስለ እኛ','ab-h':'ዓለም ደረጃ ሕክምና ወደ ወልቂጤ',
+    'ab-p':'ከ2019 ጀምሮ ዋቤ ዯንታል ኬር የወልቂጤ ማህበረሰብ ለጥርስ ጤና ያምናቸው ክሊኒክ ሆኗል።',
+    'founded':'በወልቂጤ ተቋቋመ',
+    'ft1':'ሙሉ የተረጋገጠ ቡድን','fd1':'ሁሉም ሐኪሞች የኢትዮጵያ ሕክምና ምክር ቤት ዕውቅና አላቸው።',
+    'ft2':'ንጹህና ደህንነቱ የተጠበቀ','fd2':'ሙሉ ታካሚ ደህንነት ለማረጋገጥ ሆስፒታል ደረጃ ፕሮቶኮሎች።',
+    'ft3':'ተመጣጣኝ ዋጋ','fd3':'ለወልቂጤ ማህበረሰብ ምቹ ዋጋ።',
+    'svc-tag':'አገልግሎቶቻችን','svc-h':'ፈገግታዎ የሚፈልገው ሁሉ',
+    'ov1t':'መከላከያ ሕክምና','ov1d':'ጽዳት፣ ምርመራ፣ ኤክስሬይ።',
+    'ov2t':'ኦርቶዶንቲክስ','ov2d':'ብሬስ ጥርሶችን ለማስተካከል።',
+    'ov3t':'የአፍ ቀዶ ሕክምና','ov3d':'ጥርስ መንቀልና ኢምፕላንት።',
+    'ov4t':'የቆዳ ጥርስ ሕክምና','ov4d':'ማነጣ፣ ቬኒርስ፣ ፈገግታ ማሻሻያ።',
+    'ov5t':'ማደስ ሕክምና','ov5d':'ዘውድ፣ ድልድይ፣ ሰሪ ጥርስ።',
+    'ov6t':'ቀላል ቀጠሮ','ov6d':'ስልክ፣ ቴሌግራም ወይም ፎርሙ።',
+    'book-cta':'ቀጠሮ ይያዙ',
+    'ft-brand':'ዋቤ ዯንታል','ft-desc':'ለወልቂጤ ማህበረሰብ ሁሉን አቀፍ ሕክምና።',
+    'ft-ql':'ፈጣን ዝርዝር','ft-home':'ዋና','ft-svc':'አገልግሎቶች','ft-gal':'ጋለሪ','ft-con':'ያግኙን',
+    'ft-sl':'አገልግሎቶች','fts1':'መከላከያ','fts2':'ኦርቶዶንቲክስ','fts3':'ቀዶ ሕክምና','fts4':'የቆዳ ሕክምና','fts5':'ኢምፕላንት',
+    'ft-cl':'ያግኙን','ft-addr':'📍 ወልቂጤ፣ ሲልጤ ዞን',
+    'ft-copy':'© 2024 ዋቤ ዯንታል ኬር። ወልቂጤ።','ft-lic':'ፈቃድ ያለው ክሊኒክ',
+    'sv-h':'የጥርስ አገልግሎቶቻችን','sv-p':'ሙሉ ሥፋት ያለው አፍ ጤና አገልግሎት ወልቂጤ።',
+    'sv1t':'መከላከያ ሕክምና','sv1s':'ችግር ከመጀመሩ በፊት ያስቀድሙ',
+    'sv1i1':'የጥርስ ጽዳት','sv1d1':'ሙያዊ ስኬሊንግ በ6 ወር አንዴ።',
+    'sv1i2':'ዲጂታል ኤክስሬይ','sv1d2':'ዝቅተኛ ጨረር ምስል።',
+    'sv1i3':'ፍሎራይድ ሕክምና','sv1d3':'ኢናሜልን ያጠናክርና ይከላከላል።',
+    'sv1i4':'የድድ ምርመራ','sv1d4':'ቀደምት የድድ በሽታ ምርመራ።',
+    'sv-btn1':'አሁን ቀጠሮ ይያዙ','sv-btn2':'ቴሌግራም',
+    'sv2t':'ኦርቶዶንቲክስ','sv2s':'ፍጹም ፈገግታ ለማግኘት',
+    'sv2i1':'ብረት ብሬስ','sv2d1':'ሁሉንም አላሰካ ለማስተካከል።',
+    'sv2i2':'ሴራሚክ ብሬስ','sv2d2':'ሳይታዩ ለማስተካከል።',
+    'sv2i3':'ሪቴይነር','sv2d3':'ውጤቱን ለማስቀጠል።',
+    'sv2i4':'ነጻ ምክር','sv2d4':'ነጻ የሕክምና እቅድ።',
+    'sv-btn3':'አሁን ቀጠሮ ይያዙ',
+    'ft-copy2':'© 2024 ዋቤ ዯንታል ኬር።','ft-lic2':'ፈቃድ ያለው ክሊኒክ',
+    'gl-h':'ክሊኒካችንና መሣሪያዎቻችን','gl-p':'ዋቤ ዯንታል ኬርን በዓይን ይጐብኙ።',
+    'gta0':'ሁሉም ፎቶዎች','gta1':'ክሊኒክ ቦታ','gta2':'መሣሪያዎች','gta3':'ንጽሕና','gta4':'የታካሚ ፈገግታ',
+    'gl1':'ዋና መቀበያ ክፍል','glo1':'ዘመናዊ መቀበያ',
+    'gl2':'ዲጂታል ኤክስሬይ','glo2':'ዝቅተኛ ጨረር',
+    'gl3':'የሕክምና ወንበር','glo3':'የታካሚ ምቾት',
+    'gl4':'ኦቶክሌቭ መሣሪያ','glo4':'የሆስፒታል ደረጃ ንጽሕና',
+    'gl5':'የሕክምና ክፍል 1','glo5':'የግል ሕክምና ክፍል',
+    'gl6':'ታካሚ ውጤቶች','glo6':'ከሕክምና በፊትና በኋላ',
+    'ft-copy3':'© 2024 ዋቤ ዯንታል ኬር።','ft-lic3':'ፈቃድ ያለው ክሊኒክ',
+    'con-tag':'ያግኙን','con-h':'ከእኛ ጋር ይገናኙ','con-p':'በወልቂጤ፣ ሲልጤ ዞን ነን። ቀጠሮ ሳይዙ ይምጡ።',
+    'ic1l':'ስልክ','ic1s':'ቀጥታ ለመደወል','ic2s':'በቴሌግራም ያናግሩን',
+    'ic3l':'አድራሻ','ic3v':'ወልቂጤ ከተማ መሃል','ic3s':'ሲልጤ ዞን፣ ኢትዮጵያ','ic4s':'በ24 ሰዓት ምላሽ',
+    'loc-guide':'የቦታ መመሪያ','map-ph-txt':'ወልቂጤ፣ ሲልጤ ዞን<br/>ደቡብ ኢትዮጵያ','landmarks':'🏙️ አቅራቢያ ቦታዎች',
+    'lm1':'የወልቂጤ ዩኒቨርሲቲ አቅራቢያ','lm2':'ከጤና ጣቢያ 5 ደቂቃ','lm3':'ከኮሜርሻል ባንክ맞ፊት','lm4':'ከአውቶቡስ ጣቢያ 200 ሜ',
+    'hrs-tag':'የሥራ ሰዓቶች','hrs-h':'መቼ ክፍት ነን?',
+    'ht-day':'ቀን','ht-am':'ጠዋት','ht-pm':'ከሰዓት','ht-st':'ሁኔታ',
+    'd1':'<strong>ሰኞ</strong>','d2':'<strong>ማክሰኞ</strong>','d3':'<strong>ረቡዕ</strong>','d4':'<strong>አርብ</strong>','d5':'<strong>ቅዳሜ</strong>','d6':'<strong>እሑድ</strong>',
+    's1':'ክፍት','s2':'ክፍት','s3':'ክፍት','s4':'ክፍት','s5':'ትንሽ','s6':'ዝግ',
+    'bk-tag':'ቀጠሮ ይያዙ','bk-h':'ቀጠሮ ይጠይቁ',
+    'fl-fn':'መጠሪያ ስም *','fl-ln':'የአባት ስም *','fl-ph':'ስልክ ቁጥር *','fl-em':'ኢሜይል','fl-sv':'አገልግሎት *','fl-dt':'የሚፈልጉት ቀን','fl-nt':'ማስታወሻ',
+    'f-sel':'አገልግሎት ይምረጡ…','fsub-txt':'ቀጠሮ ይጠይቁ','fnote':'🔒 ደህንነቱ የተጠበቀ። በ2 ሰዓት እናረጋግጣለን።',
+    'direct-q':'ቀጥታ ቀጠሮ ይፈልጋሉ?','dir-call':'ደውሉ','dir-tg':'ቴሌግራም',
+    'ft-copy4':'© 2024 ዋቤ ዯንታል ኬር። ወልቂጤ።','ft-lic4':'ፈቃድ ያለው ክሊኒክ'
+  }
+};
+
+let curLang='en';
+
+function switchLang(lang){
+  curLang=lang;
+  document.getElementById('lpEn').classList.toggle('on',lang==='en');
+  document.getElementById('lpAm').classList.toggle('on',lang==='am');
+  const d=T[lang];
+  for(const[id,val]of Object.entries(d)){
+    const el=document.getElementById(id);
+    if(el)el.innerHTML=val;
+  }
+}
+
+function showSitePage(pg){
+  ['home','services','gallery','contact'].forEach(p=>{
+    document.getElementById('sp-'+p).classList.toggle('show',p===pg);
+    const nl=document.getElementById('nl-'+p);
+    if(nl)nl.classList.toggle('active',p===pg);
+  });
+}
+
+function filterGalPrev(cat,idx){
+  for(let i=0;i<5;i++){const t=document.getElementById('gt'+i);if(t)t.classList.toggle('on',i===idx)}
+  document.querySelectorAll('#gal-grid-p .gal-item').forEach(item=>{
+    item.style.display=(cat==='all'||item.dataset.cat===cat)?'flex':'none';
+  });
+}
+</script>
